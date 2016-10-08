@@ -4,12 +4,13 @@ package empresa;
 import BLL.CargosBLL;
 import ENTITIES.Cargos;
 import java.util.ArrayList;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class FrameCargos extends javax.swing.JFrame {
-
+    
+    CargosBLL carBll = new CargosBLL();
+    
     public FrameCargos() {
         initComponents();
     }
@@ -102,7 +103,7 @@ public class FrameCargos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    private void llenarTabla() {
         ArrayList<Cargos> ls = new ArrayList<>();
         ls.add(new Cargos(1, "Administrador"));
         ls.add(new Cargos(2, "Docente"));
@@ -113,7 +114,30 @@ public class FrameCargos extends javax.swing.JFrame {
         vec[1] = ls.get(0).getNombre();
             
         modelo.addRow(vec);
+    }
+    
+    private void guardar() {
         
+        Cargos cargo = new Cargos();
+        cargo.setId(Integer.parseInt(txtId.getText()));
+        cargo.setNombre(txtNombre.getText());
+        
+        if (carBll.buscarId(cargo.getId()) == null) {
+            
+            carBll.guardar(cargo);
+            JOptionPane.showMessageDialog(null, "REGISTRADO CORRECTAMENTE");
+            
+        } else {
+            
+            JOptionPane.showMessageDialog(null, "LO VOY A ACTUALIZAR");
+            
+        }
+        
+    }
+    
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        
+        guardar();
         
         
     }//GEN-LAST:event_btnGuardarActionPerformed
