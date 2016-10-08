@@ -107,6 +107,8 @@ public class FrameCargos extends javax.swing.JFrame {
         ls.add(new Cargos(1, "Administrador"));
         ls.add(new Cargos(2, "Docente"));
         
+        
+        
         DefaultTableModel modelo = (DefaultTableModel) tbCargos.getModel();
         Object[] vec = new Object[2];
         vec[0] = ls.get(0).getId();
