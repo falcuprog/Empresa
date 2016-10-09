@@ -4,7 +4,6 @@ package BLL;
 import DAL.IEmpresa;
 import ENTITIES.Cargos;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 public class CargosBLL implements IEmpresa<Cargos> {
     
@@ -13,10 +12,8 @@ public class CargosBLL implements IEmpresa<Cargos> {
     @Override
     public void guardar(Cargos obj) {
         
-        try {
-            
-            lsCargos.add(obj);
-            
+        try {            
+            lsCargos.add(obj);                        
         } catch (Exception e) {
             throw e;
         }
@@ -25,13 +22,22 @@ public class CargosBLL implements IEmpresa<Cargos> {
 
     @Override
     public void eliminar(Object id) {
-        throw new UnsupportedOperationException("Not suppor"
-                + "ted yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            lsCargos.removeIf(r -> r.getId() == (Integer)id);
+            //lsCargos.remove(lsCargos.indexOf(buscarId(id)));
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public void actualizar(Cargos obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {            
+            lsCargos.add(lsCargos.indexOf(buscarId(obj.getId())), obj);            
+            lsCargos.remove(lsCargos.indexOf(buscarId(obj.getId()))+1);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
@@ -47,7 +53,11 @@ public class CargosBLL implements IEmpresa<Cargos> {
 
     @Override
     public ArrayList<Cargos> leer() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            return lsCargos;
+        } catch (Exception e) {
+            throw e;
+        }
     }
     
 }

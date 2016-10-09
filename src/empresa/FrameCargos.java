@@ -26,8 +26,14 @@ public class FrameCargos extends javax.swing.JFrame {
         btnGuardar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbCargos = new javax.swing.JTable();
+        btnEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("ID");
 
@@ -59,6 +65,13 @@ public class FrameCargos extends javax.swing.JFrame {
         tbCargos.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tbCargos);
 
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -78,7 +91,10 @@ public class FrameCargos extends javax.swing.JFrame {
                                     .addComponent(jLabel2)
                                     .addGap(18, 18, 18)
                                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(btnGuardar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnGuardar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnEliminar)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -94,7 +110,9 @@ public class FrameCargos extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btnGuardar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardar)
+                    .addComponent(btnEliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -104,16 +122,19 @@ public class FrameCargos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void llenarTabla() {
-        ArrayList<Cargos> ls = new ArrayList<>();
-        ls.add(new Cargos(1, "Administrador"));
-        ls.add(new Cargos(2, "Docente"));
+        ArrayList<Cargos> ls = carBll.leer();
         
         DefaultTableModel modelo = (DefaultTableModel) tbCargos.getModel();
-        Object[] vec = new Object[2];
-        vec[0] = ls.get(0).getId();
-        vec[1] = ls.get(0).getNombre();
+        modelo.setRowCount(0);
+        
+        for (int i = 0; i < ls.size(); i++) {
+            Object[] vec = new Object[2];
+            vec[0] = ls.get(i).getId();
+            vec[1] = ls.get(i).getNombre();
             
-        modelo.addRow(vec);
+            modelo.addRow(vec);
+        }
+        
     }
     
     private void guardar() {
@@ -129,18 +150,44 @@ public class FrameCargos extends javax.swing.JFrame {
             
         } else {
             
-            JOptionPane.showMessageDialog(null, "LO VOY A ACTUALIZAR");
+            carBll.actualizar(cargo);
+            JOptionPane.showMessageDialog(null, "ACTUALIZADO CORRECTAMENTE");
             
         }
+        llenarTabla();
         
     }
     
+    private void eliminar(int id) {
+        carBll.eliminar(id);
+        
+        JOptionPane.showMessageDialog(null, "ELIMINADO CORRECTAMENTE");
+        llenarTabla();
+    }
+    
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        
-        guardar();
-        
-        
+        try {
+            guardar();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try {
+            llenarTabla();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        try {
+            eliminar(Integer.parseInt(txtId.getText()));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,6 +225,7 @@ public class FrameCargos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
